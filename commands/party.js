@@ -812,7 +812,7 @@ let party = `#${message.author.tag}\n1. `
 
 if(!args[0]) return message.reply("You must specify a number of pokemons for your party!");
 
-if(!parseInt(args[0])) return message.reply("Cant understand what number is that :thinking:");
+if(!parseInt(args[0])) return message.reply("Cant understand what number is that :pokethink:");
 var numteam = parseInt(args[0]);
 	
 if(numteam > 6) {
