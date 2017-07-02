@@ -1,5 +1,5 @@
 exports.run = (client, message, args) => {
-
+return;
 if (message.channel.id !=="308184273100210176") return;
 
 let tempmsg = args.join(" ");
