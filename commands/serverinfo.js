@@ -11,7 +11,7 @@ const embed = new Discord.RichEmbed()
 .addField('SERVER ID', message.guild.id, true)
 .addField('OWNER', message.guild.owner.user.tag, true)
 .addField('TOTAL MEMBERS', message.guild.memberCount, true)
-.addfield('MEMBERS ONLINE', message.guild.members.filter(m => ((m.user.presence.status === "online" )||(m.user.presence.status === "dnd" )||(m.user.presence.status === "idle" ))).size , true)
+.addField('MEMBERS ONLINE', message.guild.members.filter(m => ((m.user.presence.status === "online" )||(m.user.presence.status === "dnd" )||(m.user.presence.status === "idle" ))).size , true)
 .addField('ROLES', message.guild.roles.size, true)
 .addField('CREATED DATE', moment(message.guild.createdAt).format('dddd, MMMM Do YYYY, h:mm:ss a'), true)
 
