@@ -10,10 +10,10 @@ const embed = new Discord.RichEmbed()
 .setDescription('\nHello everyone, This is a server for pokemon lovers and friendly users around.\nYou can share all your idea about pokemon, talk about rom-hacking and also suggest some improvements as well.')
 .addField('SERVER ID', message.guild.id, true)
 .addField('OWNER', message.guild.owner.user.tag, true)
-.addField('TOTAL MEMBERS', message.guild.memberCount, true)
-.addField('MEMBERS ONLINE', message.guild.members.filter(m => ((m.user.presence.status === "online" )||(m.user.presence.status === "dnd" )||(m.user.presence.status === "idle" ))).size , true)
-.addField('ROLES', message.guild.roles.size, true)
-.addField('CREATED DATE', moment(message.guild.createdAt).format('dddd, MMMM Do YYYY, h:mm:ss a'), true)
+.addField('TOTAL MEMBERS', message.guild.memberCount, false)
+.addField('MEMBERS ONLINE', message.guild.members.filter(m => ((m.user.presence.status === "online" )||(m.user.presence.status === "dnd" )||(m.user.presence.status === "idle" ))).size , false)
+.addField('ROLES', message.guild.roles.size, false)
+.addField('CREATED DATE', moment(message.guild.createdAt).format('dddd, MMMM Do YYYY, h:mm:ss a'), false)
 
 message.channel.send({embed});
 }
