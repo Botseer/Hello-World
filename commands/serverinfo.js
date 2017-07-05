@@ -6,7 +6,7 @@ exports.run = (client, message, args) => {
  
 const embed = new Discord.RichEmbed()
 .setAuthor(message.guild.name, message.guild.iconURL)
-.setColor(0x4499E7)
+.setColor('RANDOM')
 .setDescription('\nHello everyone, This is a server for pokemon lovers and friendly users around.\nYou can share all your idea about pokemon, talk about rom-hacking and also suggest some improvements as well.')
 .addField('SERVER ID', message.guild.id, true)
 .addField('OWNER', message.guild.owner.user.tag, true)
