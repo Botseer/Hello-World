@@ -21,7 +21,6 @@ if (message.mentions.users.size === 0){
 		.addField('Joined', moment(ui_name.joinedAt).format('dddd, MMMM Do YYYY, h:mm:ss a'))
 		.addField('Discrim', `#**${ui_name.user.discriminator}**`)
 		.addField('Status', ui_name.user.presence.status,true)
-		.addField('Game', ui_name.user.presence.game,true)
 		.addField('Bot', ui_name.user.bot,true)
 	message.channel.send({embed});
 };
