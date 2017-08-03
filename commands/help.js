@@ -3,6 +3,8 @@ const config = require('../config.json');
 exports.run = (client, message, args) => {
   client.commandsss = new Discord.Collection();
 
+  if(message.channel.id !== "308184273100210176") return;
+  
   let permlvl = 0;
   let mod_role = message.guild.roles.find('name', config.modRole);
   if (mod_role && message.member.roles.has(mod_role.id)) permlvl = 1;
