@@ -5,6 +5,7 @@ module.exports = async message => {
   let client = message.client;
   if (message.author.bot) return;
   if ((message.content.toLowerCase().includes('https://discord.gg')) || (message.content.toLowerCase().includes('https://discord.me')) || (message.content.toLowerCase().includes('discord.gg')) || (message.content.toLowerCase().includes('discord.me'))) {
+    if (message.author.id === "279550792774582272") return;
     message.delete();
     message.reply("You cant promote your servers here!");
     message.guild.channels.get("305666620796174337").send(`<@${message.author.id}> tried promoting personal servers here.`);
