@@ -101,7 +101,7 @@ var motivatemsg=
     "You may be disappointed if you fail, but you are doomed if you don’t try.",
     "Remember no one can make you feel inferior without your consent.",
     "Life is what we make it, always has been, always will be."
-    "The question isn’t who is going to let me; it’s who is going to stop me.",
+    "The question isnt who is going to let me; its who is going to stop me.",
     "When everything seems to be going against you, remember that the airplane takes off against the wind, not with it.",
     "It’s not the years in your life that count. It’s the life in your years.",
     "Change your thoughts and you change your world.",
