@@ -25,6 +25,6 @@ var welcomemsg =
   .setFooter(`User Join `)
   .setTimestamp()
   member.guild.channels.get(`304930941174939649`).send({embed}).catch(err => console.error(err));
-  //member.guild.channels.get(`304926866995937282`).send(`Welcome to **${member.guild.name}**, <@${member.user.id}>!\nAnd yeah also make sure to read the Notices in <#304921323577147392>`).catch(err => console.error(err));
+  member.guild.channels.get(`304926866995937282`).send(`Welcome to **${member.guild.name}**, <@${member.user.id}>!\nMake sure to have a quick look around <#304921323577147392>`).catch(err => console.error(err));
 
 };
