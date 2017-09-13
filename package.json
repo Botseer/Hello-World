@@ -4,6 +4,7 @@
   "description": "A bot in development using York's command handler.",
   "main": "index.js",
   "dependencies": {
+    "node": "^8.4.0",
     "discord.js": "^11.2.1",
     "fs-nextra": "^0.2.1",
     "moment": "^2.18.1",
