@@ -1,6 +1,9 @@
 {
-    "ownerId": "279550792774582272",
-    "modRole": "moderator",
-    "cooldown": 12,
-    "prefix": "!"
+    "ownerID" : "279550792774582272",
+    "clientID" : "344829918330486785",
+    "setting" : {
+        "prefix" : "!",
+        "modRole" : "moderator",
+        "botchannel" : "308184273100210176"
+    }
 }

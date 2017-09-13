@@ -1,28 +1,40 @@
-const config = require('../config.json');
-const errorChecks = require('../functions/parseText.js');
+module.exports = class {
+    constructor(client) {
+        this.client = client;
+    }
 
-module.exports = async message => {
-  let client = message.client;
-  if (message.author.bot) return;
-  if ((message.content.toLowerCase().includes('https://discord.gg')) || (message.content.toLowerCase().includes('https://discord.me')) || (message.content.toLowerCase().includes('discord.gg')) || (message.content.toLowerCase().includes('discord.me'))) {
-    if (message.author.id === "279550792774582272") return;
-    message.delete();
-    message.reply("You cant promote your servers here!");
-    message.guild.channels.get("305666620796174337").send(`<@${message.author.id}> tried promoting personal servers here.`);
-  }
-  errorChecks(message, message.content);
-  if (!message.content.startsWith(config.prefix)) return;
-  let command = message.content.split(' ')[0].slice(config.prefix.length);
-  let params = message.content.split(' ').slice(1);
-  let perms = client.elevation(message);
-  let cmd;
-  if (client.commands.has(command)) {
-    cmd = client.commands.get(command);
-  } else if (client.aliases.has(command)) {
-    cmd = client.commands.get(client.aliases.get(command));
-  }
-  if (cmd) {
-    if (perms < cmd.conf.permLevel) return;
-    cmd.run(client, message, params, perms);
-  }
-};
+    async execute(message) {
+        // escaping if the message is run by bot
+        if (message.author.bot) return;
+
+        //calculating level of the user
+        const level = this.client.permLevelCal(message);
+
+        // checking for direct bot mention
+        if (message.content.match(new RegExp(`^<@!?${this.client.user.id}>$`))) {
+            let mentionMsg = '';
+            mentionMsg = `The prefix is \`${this.client.config.setting.prefix}\`.`;
+            return message.channel.send(mentionMsg);
+        }
+
+        let prefix = this.client.config.setting.prefix;
+        // returning if the messages is not started with prefix
+        if (!prefix) return;
+
+        const args = message.content.slice(prefix.length).trim().split(/ +/g);
+        const command = args.shift().toLowerCase();
+        const cmd = this.client.commands.get(command) || this.client.commands.get(this.client.aliases.get(command));
+        if (cmd && !message.guild && cmd.conf.guildOnly)
+            return message.channel.send('This command is unavailable via private message. Please run this command in a guild.');
+        if (cmd && level >= cmd.conf.permLevel) {
+            message.flags = [];
+            while (args[0] && args[0][0] === '-') {
+                message.flags.push(args.shift().slice(1));
+            }
+            this.client.log('log', `${message.author.username} (${message.author.id}) ran command ${cmd.help.name}`, 'CMD');
+            cmd.run(message, args, level).catch(error => {
+                message.channel.send(error);
+            });
+        }
+    }
+}

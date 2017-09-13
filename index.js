@@ -1,65 +1,76 @@
-const Discord = require('discord.js');
-const client = new Discord.Client();
-const config = require('./config.json');
-const moment = require('moment');
-const fs = require('fs');
-require('./util/eventLoader')(client);
+const { Client, Collection } = require('discord.js');
+const {readdir} = require('fs-nextra');
+if (process.version.slice(1).split('.')[0] < 8) throw new Error('Node 8.0.0 or higher is required. Update Node on your system.');
 
-client.login(process.env.TOKEN);
-const log = message => {
-  console.log(`[${moment().format('YYYY-MM-DD HH:mm:ss')}] ${message}`);
-};
 
-client.commands = new Discord.Collection();
-client.aliases = new Discord.Collection();
-fs.readdir('./commands/', (err, files) => {
-  if (err) console.error(err);
-  log(`Loading a total of ${files.length} commands.`);
-  files.forEach(f => {
-    let props = require(`./commands/${f}`);
-    log(`Loading Command: ${props.help.name}.`);
-    client.commands.set(props.help.name, props);
-    props.conf.aliases.forEach(alias => {
-      client.aliases.set(alias, props.help.name);
+class LookerBOT extends Client{
+    constructor(options) {
+    super(options);
+    this.config = require('./config.json');
+    this.commands = new Collection();
+    this.aliases = new Collection();
+  }
+
+permLevelCal(message){
+    let permLvl = 0;
+
+    if(message.author.id === client.config.ownerID) return permLvl = 10;
+    if (!message.guild || !message.member) return 0;
+
+    try{
+        const moderator = message.guild.roles.find(r => r.name.toLowerCase() === client.config.setting.modRole.toLowerCase());
+        if (moderator && message.member.roles.has(modRole.id)) permlvl = 5;
+    }
+    catch (error) {
+        console.log("moderator role not found")
+    }
+    return permLvl;
+
+}
+
+log(type, message, title) {
+    if (!title) title = 'Log';
+    console.log(`[${type}] [${title}]${message}`);
+  }
+
+}
+
+const client = new LookerBOT();
+
+const handler = async() => {
+
+    //event handler
+    const eventFiles = await readdir('./events/')
+    client.log('log',`loading a total of ${eventFiles.length} events.`)
+
+    eventFiles.forEach(file =>{
+        const eventName = file.split('.')[0];
+        const event = new (require(`./events/${file}`))(client);
+        client.on(eventName, (...args) => event.execute(...args));
+        client.log('log',`Loading Event ${eventName} ✔`);
+        delete require.cache[require.resolve(`./events/${file}`)];
     });
-  });
-});
-client.reload = command => {
-  return new Promise((resolve, reject) => {
-    try {
-      delete require.cache[require.resolve(`./commands/${command}`)];
-      let cmd = require(`./commands/${command}`);
-      client.commands.delete(command);
-      client.aliases.forEach((cmd, alias) => {
-        if (cmd === command) client.aliases.delete(alias);
-      });
 
-      client.commands.set(command, cmd);
-      cmd.conf.aliases.forEach(alias => {
-        client.aliases.set(alias, cmd.help.name);
-      });
-      resolve();
-    } catch (e){
-      reject(e);
+    //command handler
+    const cmdFiles = await readdir('./commands/');
+    client.log('log', `Loading a total of ${cmdFiles.length} commands.`);
+
+    cmdFiles.forEach(f => {
+    try {
+        const props = new (require(`./commands/${f}`))(client);
+        if (f.split('.').slice(-1)[0] !== 'js') return;
+        client.log('log', `Loading Command: ${props.help.name}. ✔`);
+        client.commands.set(props.help.name, props);
+        if (props.init) props.init(client);
+        props.conf.aliases.forEach(alias => {
+            client.aliases.set(alias, props.help.name);
+        });
+    } catch (e) {
+        client.log(`Unable to load command ${f}: ${e}`);
     }
   });
+
+  client.login(process.ENV.TOKEN);
 };
 
-client.elevation = message => {
-
-if(message.channel.type === "dm") return message.reply("You want to talk to me ??\nCome lets talk here in this channel <#308184273100210176>");
-let permlvl = 0;
-let mod_role = message.guild.roles.find('name', config.modRole);
-if (mod_role && message.member.roles.has(mod_role.id)) permlvl = 1;
-if (message.author.id === config.ownerId) permlvl = 2;
-  return permlvl;
-};
-
-
-process.on('unhandledRejection', error => {
-  console.error(`Uncaught Promise Error: ${error}`);
-});
-
-client.on('error', (e) => console.error(e));
-client.on('warn', (e) => console.warn(e));
-client.on('debug', (e) => console.info(e));
+handler();

@@ -1,19 +1,24 @@
-exports.run = (client, message) => {
-  message.channel.send('Ping?')
-    .then(msg => {
-      msg.edit(`:ping_pong: Pong! (:blue_heart: took: ${msg.createdTimestamp - message.createdTimestamp}ms)`);
+const Command = require('../base/Command.js');
+
+class Ping extends Command {
+  constructor(client) {
+    super(client, {
+      name: 'ping',
+      description: 'Latency and API response times.',
+      usage: 'ping',
+      category: 'fun',
+      aliases: ['pong']
     });
-};
+  }
 
-exports.conf = {
-  enabled: true,
-  guildOnly: false,
-  aliases: [],
-  permLevel: 0
-};
+  async run(message, args, level) { // eslint-disable-line no-unused-vars
+    try {
+      const msg = await message.channel.send('🏓 Ping!');
+      msg.edit(`🏓 Pong! (Roundtrip took: ${msg.createdTimestamp - message.createdTimestamp}ms. 🏓: ${Math.round(this.client.ping)}ms.)`);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
 
-exports.help = {
-  name: 'ping',
-  description: 'Ping/Pong command. I wonder what this does? /sarcasm',
-  usage: 'ping'
-};
+module.exports = Ping;

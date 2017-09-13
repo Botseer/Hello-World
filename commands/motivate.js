@@ -1,12 +1,18 @@
-exports.run = (client, message, args) => {
+const Command = require('../base/Command.js');
+const { RichEmbed } = require('discord.js');
 
-//if(message.channel.id !== "308184273100210176")
-//{
-//    message.reply("Look in this channel <#308184273100210176>").then(m => m.delete(7000));
-//}
+class Motivate extends Command {
+  constructor(client) {
+    super(client, {
+      name: 'motivate',
+      description: 'Sends a motivational message',
+      usage: 'motivation'
+    });
+  }
 
-var motivatemsg=
-[
+  async run(message, args, level) {
+    var motivatemsg=
+    [
     "Life isn’t about getting and having, it’s about giving and being.",
     "Whatever the mind of man can conceive and believe, it can achieve.",
     "Strive not to be a success, but rather to be of value.",
@@ -109,26 +115,12 @@ var motivatemsg=
     "Nothing is impossible, the word itself says, “I’m possible!”",
     "The only way to do great work is to love what you do.",
     "If you can dream it, you can achieve it."
-]
+    ]
+    message.channel.send('', {embed: {
+        color: 8910953,
+        description: motivatemsg[Math.floor(Math.random()*motivatemsg.length)] }
+    });
+  }
 
-var randomNumber = Math.floor(Math.random()*motivatemsg.length);
-let msgtosend = motivatemsg[randomNumber]
-
-/*message.guild.channels.get("308184273100210176")*/message.channel.send('', {embed: {
-  color: 8910953,
-  description: msgtosend
-}});
 }
-
-exports.conf = {
-  enabled: true,
-  guildOnly: false,
-  aliases: [],
-  permLevel: 0
-};
-
-exports.help = {
-  name: 'motivate',
-  description: 'sends a motivational message to the channel messaged.',
-  usage: 'motivate'
-};
+module.exports = Motivate;

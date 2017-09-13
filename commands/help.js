@@ -1,38 +1,43 @@
-const Discord = require('discord.js');
-const config = require('../config.json');
-exports.run = (client, message, args) => {
-  client.commandsss = new Discord.Collection();
+const Command = require('../base/Command.js');
 
-  if(message.channel.id !== "308184273100210176") return;
-  
-  let permlvl = 0;
-  let mod_role = message.guild.roles.find('name', config.modRole);
-  if (mod_role && message.member.roles.has(mod_role.id)) permlvl = 1;
-  if (message.author.id === config.ownerId) permlvl = 2;
-  client.commandsss = client.commands.filter(c => c.conf.permLevel <= permlvl)
-
-  if (!args[0]) {
-    const commandNames = Array.from(client.commandsss.keys());
-    const longest = commandNames.reduce((long, str) => Math.max(long, str.length), 0);
-    message.channel.send(`= Command List =\n\n[Use ${config.prefix}help <commandname> for details]\n\n${client.commandsss.map(c => `${config.prefix}${c.help.name}${' '.repeat(longest - c.help.name.length)} :: ${c.help.description}`).join('\n')}`, {code: "asciidoc"})
-  } else {
-    let command = args[0];
-    if (client.commandsss.has(command)) {
-      command = client.commandsss.get(command);
-      message.channel.send(`= ${command.help.name} = \n${command.help.description}\nUsage:: ${command.help.usage}`, {code: "asciidoc"});
+class Help extends Command{
+    constructor(client){
+        super(client,{
+            name: "help",
+            description: "Displays all the available commands that you can use.",
+            usage: "help [command_name]",
+            aliases: ['h','halp'],
+        });
     }
-  }
-};
 
-exports.conf = {
-  enabled: true,
-  guildOnly: false,
-  aliases: ['h', 'halp'],
-  permLevel: 0
-};
+    async run(message, args, level) {
+        let prefix = this.client.config.setting.prefix;
 
-exports.help = {
-  name: 'help',
-  description: 'Displays all the available commands for your permission level.',
-  usage: 'help [command]'
-};
+        if(!args[0]) {
+            const myCommands = message.guild ? this.client.commands.filter(cmd => cmd.conf.permLevel <= level) : this.client.commands.filter(cmd => cmd.conf.permLevel <= level &&  cmd.conf.guildOnly !== true);
+            const commandNames = myCommands.keyArray();
+            const longest = commandNames.reduce((long, str) => Math.max(long, str.length), 0);
+            let currentCategory = '';
+            let output = `= Command List =\n\n[Use ${this.client.config.setting.prefix}help <commandname> for details]\n`;
+            const sorted = myCommands.sort((p, c) => p.help.category > c.help.category ? 1 :  p.help.name > c.help.name && p.help.category === c.help.category ? 1 : -1 );
+            sorted.forEach( c => {
+                const cat = c.help.category.toLowerCase();
+                if (currentCategory !== cat) {
+                    output += `\n== ${cat} ==\n`;
+                    currentCategory = cat;
+                }
+                output += `${prefix}${c.help.name}${' '.repeat(longest - c.help.name.length)} :: ${c.help.description}\n`;
+            });
+            message.channel.send(output, {code:'asciidoc'});
+        }else{
+            let command = args[0];
+            if (this.client.commands.has(command)) {
+                command = this.client.commands.get(command);
+                if (level < command.conf.permLevel) return;
+                message.channel.send(`= ${command.help.name} = \n${command.help.description}\nusage:: ${command.help.usage}\nalises:: ${command.conf.aliases.join(', ')}\ncategory:: ${command.help.category}`, {code:'asciidoc'});
+            }
+        }
+    }
+}
+
+module.exports = Help;

@@ -1,20 +1,31 @@
-const Discord = require('discord.js');
+const Command = require('../base/Command.js');
+const { RichEmbed } = require('discord.js');
 const moment = require('moment');
-exports.run = function(client, message, args) {
 
-if(message.channel.id !== "308184273100210176") return;
- 
-let tempn;
-if (message.mentions.users.size === 0){
-	tempn = message.author.id;
-}else{
-	tempn = message.mentions.users.first().id;
-}    
-	let ui_name = client.guilds.get(message.guild.id).members.get(tempn);
-	
-    	const embed = new Discord.RichEmbed()
+class Userinfo extends Command{
+    constructor(client) {
+    super(client, {
+      name: 'userinfo',
+      description: 'Displays user information.',
+      usage: 'userinfo',
+      aliases: ['userstats','uinfo'],
+      guildOnly: true
+    });
+  }
+
+    async run(message, args, level) {
+        let tempn;
+        if (message.mentions.users.size === 0)    {
+            tempn = message.author.id;
+        } else {
+            tempn = message.mentions.users.first().id;
+        }
+
+        let ui_name = this.client.guilds.get(message.guild.id).members.get(tempn);
+
+        const embed = new RichEmbed()
 		.setAuthor(ui_name.user.username, ui_name.user.avatarURL)
-		.setColor('RANDOM')
+		.setColor(0xb0c4de)
 		.addField('Username', ui_name.user.username, true)
 		.addField('Nickname', ui_name.nickname, true)
 		.addField('Created', moment(ui_name.user.createdAt).format('dddd, MMMM Do YYYY, h:mm:ss a'))
@@ -22,18 +33,10 @@ if (message.mentions.users.size === 0){
 		.addField('Discrim', `#**${ui_name.user.discriminator}**`)
 		.addField('Status', ui_name.user.presence.status,true)
 		.addField('Bot', ui_name.user.bot,true)
-	message.channel.send({embed});
-};
+        .setTimestamp()
+        .setFooter(this.client.user.username, this.client.user.avatarURL);
+        message.channel.send({embed}).catch(e => console.error(e));
+    }   
+}
 
-exports.conf = {
-  enabled: true,
-  guildOnly: false,
-  aliases: [''],
-  permLevel: 0
-};
-
-exports.help = {
-  name: 'userinfo',
-  description: 'Sends some info about the user using this command.',
-  usage: 'userinfo'
-};
+module.exports = Userinfo;

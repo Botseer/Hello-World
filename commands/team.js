@@ -1,8 +1,19 @@
-exports.run = function(client, message, args) {
+const Command = require('../base/Command.js');
+const { RichEmbed } = require('discord.js');
 
-if(message.channel.id !== "308184273100210176") return;
+class Team extends Command {
+  constructor(client) {
+    super(client, {
+      name: 'team',
+      description: 'Creates a random pokémon team of max upto 6 pokémons..',
+      usage: 'team [number]',
+      category: "fun"
+    });
+  }
 
-let allpoke =
+  async run(message, args, level) {
+
+  let allpoke =
 [
 	"Bulbasaur",
 	"Ivysaur",
@@ -807,37 +818,38 @@ let allpoke =
 	"Magearna",
 	"Marshadow"
 ]
+/* taking the count for building the team */
+  var number;
+  var note = '';
+  
+  if(!args[0]){
+	  note = "You didnt enter the amount of pokémon you wanted, by default it is 6."
+    number = 6;
+  } else {
+    if(!parseInt(args[0])) {
+      return message.reply("Cant understand what number is that <:pokethink:329837705586278410> ");
+    } else {
+      number = parseInt(args[0]);
+    }
+  }
+  if (number > 6){
+    number = 6;
+    note = "Since you can only have 6 pokémon in your team, only a team of 6 was built."
+  }
 
-let party = `#${message.author.tag}\n1. `
-
-if(!args[0]) return message.reply("You must specify a number of pokemons for your party!");
-
-if(!parseInt(args[0])) return message.reply("Cant understand what number is that <:pokethink:329837705586278410> ");
-var numteam = parseInt(args[0]);
-	
-if(numteam > 6) {
-	message.channel.send("You can have a party max of 6 pokemons so I will give only 6 pokemons.")
-numteam = 6;
+    const embed = new RichEmbed()
+    .setAuthor(message.author.username, message.author.avatarURL)
+    .setColor(0xdaa520)
+    .setDescription(`Here is your pokémon team, Enjoy :smiley:`)
+    .setTimestamp()
+    .setFooter(this.client.user.username, this.client.user.avatarURL);
+    for(let i = 0; i < number; i++) {
+      embed.addField('pokémon '+ (i+1), allpoke[Math.floor(Math.random()*allpoke.length)], false);
+    }
+	if(note != "")
+	embed.addField('__note__',note)
+    message.channel.send({embed}).catch(e => console.error(e));
+  }
 }
-for (var i=0; i< numteam; i++)
-{
-    var randomNumber = Math.floor(Math.random()*allpoke.length);
-    party+= allpoke[randomNumber] + "\n" + (i+2) + ". ";
-}
-party = party.slice(0,-3);
-message.channel.send(party, {code: "md"});
 
-}
-
-exports.conf = {
-  enabled: true,
-  guildOnly: false,
-  aliases: [''],
-  permLevel: 0
-};
-
-exports.help = {
-  name: 'party',
-  description: 'Generates a random pokemon party of desired number for you.',
-  usage: 'party <number>'
-};
+module.exports = Team;
