@@ -3,8 +3,10 @@
   "version": "1.0.0",
   "description": "A bot in development using York's command handler.",
   "main": "index.js",
+  "engines": {
+    "node": "8.4.0"
+  }
   "dependencies": {
-    "node": "^7.0.0",
     "discord.js": "^11.2.1",
     "fs-nextra": "^0.2.1",
     "moment": "^2.18.1",
