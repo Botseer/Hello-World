@@ -22,6 +22,7 @@ permLevelCal(message){
         if (moderator && message.member.roles.has(moderator.id)) permlvl = 5;
     }
     catch (error) {
+        console.log(error);
         console.log("moderator role not found")
     }
     return permLvl;
