@@ -19,7 +19,7 @@ permLevelCal(message){
 
     try{
         const moderator = message.guild.roles.find(r => r.name.toLowerCase() === client.config.setting.modRole.toLowerCase());
-        if (moderator && message.member.roles.has(moderator.id)) permlvl = 5;
+        if (moderator && message.member.roles.has(moderator.id)) permLvl = 5;
     }
     catch (error) {
         console.log(error);
