@@ -836,15 +836,25 @@ class Team extends Command {
     number = 6;
     note = "Since you can only have 6 pokémon in your team, only a team of 6 was built."
   }
-
+  	var ranNum;
     const embed = new RichEmbed()
     .setAuthor(message.author.username, message.author.avatarURL)
     .setColor(0xdaa520)
     .setDescription(`Here is your pokémon team, Enjoy :smiley:`)
     .setTimestamp()
-    .setFooter(this.client.user.username, this.client.user.avatarURL);
+    .setFooter(this.client.user.username, this.client.user.avatarURL);	
+	var tofind = '';
     for(let i = 0; i < number; i++) {
-      embed.addField('pokémon '+ (i+1), allpoke[Math.floor(Math.random()*allpoke.length)], false);
+	  ranNum = Math.floor(Math.random()*allpoke.length);	
+	  // section for taking emote //  
+	  if (parseInt(ranNum) < 10) tofind = 'Shuffle00' + (ranNum + 1);
+      else if(parseInt(ranNum) < 100) tofind = 'Shuffle0' + (ranNum + 1);
+      else tofind = 'Shuffle' + (ranNum + 1);
+	  let testarray = this.client.emojis.filter(e => e.name.includes(tofind)).array();
+	  let num = [Math.floor(Math.random()*testarray.length)]
+
+	  // emote getting ends here
+      embed.addField('pokémon '+ (i+1), allpoke[ranNum] + `<:${testarray[num].name}:${testarray[num].id}>`, false);
     }
 	if(note != "")
 	embed.addField('__note__',note)
