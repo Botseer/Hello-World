@@ -70,7 +70,7 @@ const handler = async() => {
     }
   });
 
-  client.login(process.ENV.TOKEN);
+  client.login(process.env.TOKEN);
 };
 
 handler();
