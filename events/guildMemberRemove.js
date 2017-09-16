@@ -25,6 +25,5 @@ module.exports = class {
     .setTimestamp()
     .setFooter(this.client.user.username, this.client.user.avatarURL);
     member.guild.channels.get(`304930941174939649`).send({embed}).catch(err => console.error(err));
-    member.guild.channels.get(`304926866995937282`).send(`Welcome to **${member.guild.name}**, <@${member.user.id}>!\nMake sure to have a quick look around <#304921323577147392>`).catch(err => console.error(err));
   }
 };

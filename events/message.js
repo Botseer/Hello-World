@@ -19,7 +19,8 @@ module.exports = class {
 
         let prefix = this.client.config.setting.prefix;
         // returning if the messages is not started with prefix
-        if (!prefix) return;
+        if(!prefix) return;
+        if(!message.content.startsWith(prefix)) return;
 
         const args = message.content.slice(prefix.length).trim().split(/ +/g);
         const command = args.shift().toLowerCase();
