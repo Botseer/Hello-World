@@ -36,6 +36,12 @@ log(type, message, title) {
 
 }
 
+  String.prototype.toProperCase = function() {
+    return this.replace(/([^\W_]+[^\s-]*) */g, function(txt) {
+      return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    });
+  };
+  
 const client = new LookerBOT();
 
 const handler = async() => {
