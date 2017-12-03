@@ -98,5 +98,5 @@ class Eval extends Command {
 			return sent;
 		}
 }
-
+}
 module.exports = Eval;
