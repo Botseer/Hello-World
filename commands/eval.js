@@ -59,7 +59,7 @@ class Eval extends Command {
 
 			if (output.length + code.length > 1900) output = 'Output too long.';
 
-			const sent = await message.util.send([
+			const sent = await message.channel.send([
 				`📥\u2000**Input**${cb}js`,
 				code,
 				cb,
@@ -82,7 +82,7 @@ class Eval extends Command {
 			error = `${logs.join('\n')}\n${logs.length && error === 'undefined' ? '' : error}`;
 			error = error.replace(tokenRegex, '[TOKEN]');
 
-			const sent = await message.util.send([
+			const sent = await message.channel.send([
 				`📥\u2000**Input**${cb}js`,
 				code,
 				cb,
